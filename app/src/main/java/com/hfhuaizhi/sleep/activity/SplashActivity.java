@@ -51,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
 
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(moveIn).with(fadeInOut).with(fadeInOut3).before(rotate).before(fadeInOut2);
-        animSet.setDuration(2580);
+        animSet.setDuration(1580);
         rotate2.setDuration(500);
         animSet.start();
 

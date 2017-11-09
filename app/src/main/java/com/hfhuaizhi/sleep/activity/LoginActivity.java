@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             case R.id.tv_login_forget:
                 break;
             case R.id.tv_login_register:
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
                 break;
         }
     }
