@@ -7,12 +7,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hfhuaizhi.sleep.R;
+import com.hfhuaizhi.sleep.utils.PrefUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
-public class GuideActivity extends AppCompatActivity {
+public class GuideActivity extends BaseActivity {
 
     @BindView(R.id.banner_guide_background)
     cn.bingoogolapple.bgabanner.BGABanner mBannerGuideBackground;
@@ -28,6 +29,7 @@ public class GuideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         ButterKnife.bind(this);
+        PrefUtils.setBoolean(GuideActivity.this,"FIRST_ENTER",true);
         setListener();
         processLogic();
     }

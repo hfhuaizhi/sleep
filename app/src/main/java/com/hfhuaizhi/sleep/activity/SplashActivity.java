@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.hfhuaizhi.sleep.R;
 import com.hfhuaizhi.sleep.utils.PrefUtils;
+import com.hyphenate.chat.EMClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +36,23 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-
+        if(initLoginState()){
+           return;
+        }
         initAnimtor();
+    }
+
+    private boolean initLoginState() {
+        if(EMClient.getInstance().isLoggedInBefore()&&EMClient.getInstance().isConnected()){
+            // if(EMClient.getInstance().isConnected()){
+            //isLoggedInBefore 之前登陆过    isConnected 已经跟环信的服务器建立了连接
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            finish();
+           // return;
+            // }
+            return true;
+        }
+        return false;
     }
 
     private void initAnimtor() {
@@ -82,8 +98,15 @@ public class SplashActivity extends AppCompatActivity {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 if(!PrefUtils.getBoolean(getApplicationContext(),"FIRST_ENTER",false)){
+
                     startActivity(new Intent(getApplicationContext(),GuideActivity.class));
                     finish();
+                }else{
+
+                    startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                    finish();
+
+                    //splashView.onGetLoginState();
                 }
             }
         });
