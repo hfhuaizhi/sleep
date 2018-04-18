@@ -72,6 +72,11 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".receiver.AlarmReceiver">
+            <intent-filter>
+                <action android:name= "com.Reminder.MyReceiver" />
+            </intent-filter>
+        </receiver>
 
         <activity android:name=".activity.RegisterActivity">
         </activity>
