@@ -43,7 +43,9 @@
             android:name=".activity.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Deep">
         </activity>
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <meta-data
@@ -72,6 +74,8 @@
         </receiver>
 
         <activity android:name=".activity.RegisterActivity">
+        </activity>
+        <activity android:name=".activity.TodoDetailActivity">
         </activity>
     </application>
 

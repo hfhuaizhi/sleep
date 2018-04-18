@@ -107,12 +107,12 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void cancelProgressDialog(){
 
-       if( progressDialog!=null){
-       progressDialog.dismiss();
-       }
-       if(mDialog!=null){
-           mDialog.dismiss();
-       }
+        if( progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        if(mDialog!=null){
+            mDialog.dismiss();
+        }
 
     }
 
@@ -156,7 +156,7 @@ public class BaseActivity extends AppCompatActivity {
                 //发广播关闭所有activity
                 //// TODO: 2017\11\10 0010
                 LocalBroadcastManager manager = LocalBroadcastManager.getInstance(getApplicationContext());
-                        manager.sendBroadcast(new Intent("com.itheima.finishactivity"));
+                manager.sendBroadcast(new Intent("com.itheima.finishactivity"));
                 //打开登录页面
                 startActivity(LoginActivity.class,false);
             }
