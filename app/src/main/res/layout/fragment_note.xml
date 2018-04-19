@@ -26,13 +26,13 @@
         android:layout_marginRight="8dp"
         android:layout_alignParentBottom="true"
         app:elevation="4dp"
-        app:srcCompat="@mipmap/ico_send"/>
+        app:srcCompat="@mipmap/write"/>
 
     <TextView
         android:id="@+id/tv_home_kk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="没人装B吗~"
+        android:text="空空如也~"
         android:textSize="20dp"
         android:layout_centerInParent="true"
         />

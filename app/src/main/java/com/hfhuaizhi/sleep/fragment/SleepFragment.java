@@ -3,11 +3,14 @@ package com.hfhuaizhi.sleep.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -57,14 +60,10 @@ public class SleepFragment extends BaseFragment{
     private FloatingActionButton mFab_add;
     private List<Todo> mTodoList;
     private TodoAdapter mTdAdapter;
-public Handler mHandler = new Handler(){
-    @Override
-    public void handleMessage(Message msg) {
-        View v = (View) msg.obj;
-        showPopUp(v);
-    }
-};
     private String mToday;
+    private TextView mTv_home_kk;
+    private SoundPool mSoundPool;
+    private int mSoundID;
 
     @Nullable
     @Override
@@ -82,9 +81,9 @@ public Handler mHandler = new Handler(){
 
     private void initData() {
 
-
         mContext = getContext();
 
+        initSound();
         mTodoList = new ArrayList<>();
         getTdData(mTodoList);
         mTdAdapter = new TodoAdapter(mTodoList);
@@ -112,6 +111,14 @@ public Handler mHandler = new Handler(){
                 clickItem(position);
             }
         });
+        mLv_todo.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                playSound();
+                changeItemState(position);
+                return true;
+            }
+        });
     }
 
     private void clickItem(int position) {
@@ -124,14 +131,30 @@ public Handler mHandler = new Handler(){
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==2){
-
+        if(requestCode==1){
+            Todo tmp = (Todo) data.getSerializableExtra("tmp");
+            if(tmp!=null){
+                mTodoList.set(tmp.getId(),tmp);
+                notifyAndSave();
+            }
         }
 
     }
 
+    private void notifyAndSave() {
+        for(int i=0;i<mTodoList.size();i++){
+            mTodoList.get(i).id = i;
+        }
+        mTdAdapter.notifyDataSetChanged();
+        Gson gson = new Gson();
+        PrefUtils.setString(mContext,mToday,gson.toJson(mTodoList));
+    }
 
-
+    private void playSound() {
+        mSoundPool.play(
+                mSoundID,0.1f,0.5f,0,0,1
+        );
+    }
     private void getTdData(List<Todo> todoList) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
         mToday = sdf.format(new Date());
@@ -139,10 +162,10 @@ public Handler mHandler = new Handler(){
         if(str==null){
             return;
         }
+        mTv_home_kk.setVisibility(View.GONE);
         JsonParser parser = new JsonParser();
         //将JSON的String 转成一个JsonArray对象
         JsonArray jsonArray = parser.parse(str).getAsJsonArray();
-
         Gson gson = new Gson();
         //加强for循环遍历JsonArray
         for (JsonElement msg : jsonArray) {
@@ -238,14 +261,20 @@ public Handler mHandler = new Handler(){
         Todo todo = new Todo();
         todo.title = content;
         mTodoList.add(todo);
-        mTdAdapter.notifyDataSetChanged();
-        Gson gson = new Gson();
-        PrefUtils.setString(mContext,mToday,gson.toJson(mTodoList));
+       notifyAndSave();
 
     }
+    private void initSound() {
+
+        mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        mSoundID = mSoundPool.load(mContext, R.raw.todo, 1);
+
+    }
+
     private void initView(View view) {
         mLv_todo = view.findViewById(R.id.lv_todo);
         mFab_add = view.findViewById(R.id.fab_add);
+        mTv_home_kk = view.findViewById(R.id.tv_home_kk);
     }
 class TodoAdapter extends BaseAdapter{
 
@@ -269,25 +298,68 @@ public TodoAdapter(List list){
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         TodoHolder holder = null;
         if(convertView==null){
             holder = new TodoHolder();
             convertView = View.inflate(mContext,R.layout.item_todo,null);
             holder.tv_title = convertView.findViewById(R.id.tv_todo_title);
+            holder.bt_cricle_state = convertView.findViewById(R.id.bt_cricle_state);
+            holder.tv_msg = convertView.findViewById(R.id.tv_todo_msg);
             convertView.setTag(holder);
 
         }else{
             holder = (TodoHolder) convertView.getTag();
         }
-        holder.tv_title.setText(todoList.get(position).title);
 
+        holder.tv_title.setText(todoList.get(position).title);
+        Resources resources = mContext.getResources();
+        Drawable drawable = null;
+        switch (todoList.get(position).state){
+            case 1:
+                drawable = resources.getDrawable(R.drawable.shape_cricle_gray);
+                break;
+            case 2:
+                drawable = resources.getDrawable(R.drawable.shape_cricle_green);
+                break;
+            case 3:
+                drawable = resources.getDrawable(R.drawable.shape_cricle_yellow);
+                break;
+            case 4:
+                drawable = resources.getDrawable(R.drawable.shape_cricle_red);
+                break;
+        }
+        if(todoList.get(position).over){
+            drawable = resources.getDrawable(R.drawable.ico_ok);
+        }
+        holder.bt_cricle_state.setBackground(drawable);
+
+        if(todoList.get(position).over){
+            holder.tv_title.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG);
+            holder.tv_title.setTextColor(getResources().getColor(R.color.gray));
+        }else{
+            holder.tv_title.getPaint().setFlags(0);
+            holder.tv_title.setTextColor(Color.BLACK);
+        }
+        if(todoList.get(position).msg!=null){
+            holder.tv_msg.setText(todoList.get(position).msg);
+        }
         return convertView;
     }
     class TodoHolder{
         public TextView tv_title;
-
+        public Button bt_cricle_state;
+        public TextView tv_msg;
     }
 }
+
+    private void changeItemState(int position) {
+        if(mTodoList.get(position).over==false){
+            mTodoList.get(position).over = true;
+        }else{
+            mTodoList.get(position).over = false;
+        }
+        mTdAdapter.notifyDataSetChanged();
+    }
 
 }

@@ -4,7 +4,7 @@ package com.hfhuaizhi.sleep.utils;
 import com.hfhuaizhi.sleep.fragment.BaseFragment;
 import com.hfhuaizhi.sleep.fragment.SleepFragment;
 import com.hfhuaizhi.sleep.fragment.MessageFragment;
-import com.hfhuaizhi.sleep.fragment.SleepFragment3;
+import com.hfhuaizhi.sleep.fragment.NoteFragment;
 
 /**
  * Created by fullcircle on 2017/1/3.
@@ -12,8 +12,8 @@ import com.hfhuaizhi.sleep.fragment.SleepFragment3;
 
 public class FragmentFactory {
     private static SleepFragment sleepFragment = null;
-    private static MessageFragment sleepFragment2 = null;
-    private static SleepFragment3 sleepFragment3 = null;
+    private static NoteFragment sleepFragment2 = null;
+    private static MessageFragment sleepFragment3 = null;
 //    private static ConversationFragment conversationFragment = null;
 //    private static PlugInFragment plugInFragment = null;
 
@@ -33,13 +33,13 @@ public class FragmentFactory {
                 break;
             case 1:
                 if(sleepFragment2 == null){
-                    sleepFragment2 = new MessageFragment();
+                    sleepFragment2 = new NoteFragment();
                 }
                 fragment = sleepFragment2;
                 break;
             case 2:
                 if(sleepFragment3 == null){
-                    sleepFragment3 = new SleepFragment3();
+                    sleepFragment3 = new MessageFragment();
                 }
                 fragment = sleepFragment3;
                 break;

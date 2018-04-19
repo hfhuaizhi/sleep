@@ -64,7 +64,7 @@ public class RegisterActivity extends BaseActivity {
         mUsername = mEtRegUsername.getText().toString().trim();
         mPassword = mEtRegPassword.getText().toString().trim();
         showProgressDialog("正在注册...");
-        MyHttpUtil.doGet(NetConfig.SERVER_LOGIN+"?username="+ mUsername +"&password="+ mPassword, new MyHttpUtil.MyHttpResult() {
+        MyHttpUtil.doGet(NetConfig.SERVER_REGISTER+"?username="+ mUsername +"&password="+ mPassword, new MyHttpUtil.MyHttpResult() {
             @Override
             public void onFailure(IOException e) {
                 cancelProgressDialog();

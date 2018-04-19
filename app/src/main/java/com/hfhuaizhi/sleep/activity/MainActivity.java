@@ -2,6 +2,7 @@ package com.hfhuaizhi.sleep.activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,8 @@ import com.hfhuaizhi.sleep.db.domain.Todo;
 import com.hfhuaizhi.sleep.fragment.BaseFragment;
 import com.hfhuaizhi.sleep.utils.FragmentFactory;
 import com.hfhuaizhi.sleep.utils.ToastUtils;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
 
 import java.util.List;
 import java.util.Timer;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] titles = new String[]{"sleep","sleep2","sleep3"};
     private FloatingActionButton mFab_add;
     private Context mActivity;
+    private ResideMenu mResideMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +64,32 @@ public class MainActivity extends AppCompatActivity {
         initToolBar();
         initView();
         initdata();
+        initSlider();
         initBottomNavigationBar();
         initFirstFragment();
+    }
+
+    private void initSlider() {
+        mResideMenu = new ResideMenu(this);
+        mResideMenu.setBackground(R.drawable.menu_background);
+
+        mResideMenu.attachToActivity(this);
+        mResideMenu.setScaleValue(0.6f);
+        // create menu items;
+
+
+        ResideMenuItem aboutme = new ResideMenuItem(this, R.mipmap.ico_user, "关于我");
+        ResideMenuItem search = new ResideMenuItem(this, R.mipmap.ico_search, "搜索");
+        ResideMenuItem history = new ResideMenuItem(this, R.mipmap.ico_history, "历史记录");
+        ResideMenuItem setting = new ResideMenuItem(this, R.mipmap.ico_setting, "设置");
+        ResideMenuItem about = new ResideMenuItem(this, R.mipmap.ico_app, "关于app");
+        mResideMenu.addMenuItem(about, ResideMenu.DIRECTION_RIGHT);
+        mResideMenu.addMenuItem(aboutme, ResideMenu.DIRECTION_LEFT);
+        mResideMenu.addMenuItem(search, ResideMenu.DIRECTION_LEFT);
+        mResideMenu.addMenuItem(history, ResideMenu.DIRECTION_LEFT);
+        mResideMenu.addMenuItem(setting, ResideMenu.DIRECTION_LEFT);
+
+
     }
 
     private void initdata() {
@@ -94,11 +122,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomNavigationBar() {
-        BottomNavigationItem sleepItem = new BottomNavigationItem(R.mipmap.sleep_main,"sleep");
+        BottomNavigationItem sleepItem = new BottomNavigationItem(R.mipmap.home,"home");
         mBnbMain.addItem(sleepItem);
-        BottomNavigationItem sleepItem2 = new BottomNavigationItem(R.mipmap.sleep,"sleep");
+        BottomNavigationItem sleepItem2 = new BottomNavigationItem(R.mipmap.note,"note");
         mBnbMain.addItem(sleepItem2);
-        BottomNavigationItem sleepItem3 = new BottomNavigationItem(R.mipmap.sleep,"sleep");
+        BottomNavigationItem sleepItem3 = new BottomNavigationItem(R.mipmap.msg,"msg");
         mBnbMain.addItem(sleepItem3);
         mBnbMain.setActiveColor(R.color.active);
         mBnbMain.setInActiveColor(R.color.inactive);
@@ -146,7 +174,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mTbToolbar);
 
         mTbToolbar.setNavigationIcon(R.mipmap.menu);
+        mTbToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mResideMenu.isOpened()){
+                    mResideMenu.closeMenu();
+                }else{
+                    mResideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
 
+                }
+            }
+        });
 
     }
 }

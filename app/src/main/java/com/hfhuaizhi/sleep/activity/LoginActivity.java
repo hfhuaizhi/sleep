@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,10 +17,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hfhuaizhi.sleep.R;
 import com.hfhuaizhi.sleep.callback.MyEmCalBack;
+import com.hfhuaizhi.sleep.net.NetConfig;
+import com.hfhuaizhi.sleep.net.json.ResponseResult;
+import com.hfhuaizhi.sleep.utils.MyHttpUtil;
+import com.hfhuaizhi.sleep.utils.PrefUtils;
 import com.hfhuaizhi.sleep.utils.ToastUtils;
 import com.hyphenate.chat.EMClient;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,19 +100,29 @@ public class LoginActivity extends BaseActivity {
 
     }
     public void login(){
-        EMClient.getInstance().login(mUsername, mPassword, new MyEmCalBack() {
+        MyHttpUtil.doGet(NetConfig.SERVER_LOGIN+"?username="+ mUsername +"&password="+ mPassword, new MyHttpUtil.MyHttpResult() {
             @Override
-            public void success() {
+            public void onFailure(IOException e) {
                 cancelProgressDialog();
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+                showConfirmDialog("登录结果","连接服务器失败",null);
             }
 
             @Override
-            public void error(int i, String s) {
+            public void onResponse(String response) {
+                Log.i("response",response+"!!!!!!!!!!!!!!!!!!!!!!!");
+                //System.out.print("response is ::"+response);
                 cancelProgressDialog();
-                showConfirmDialog("登录结果","登录失败",null);
+               if(response.equals("success")){
+                   String token = mUsername+","+mPassword;
+                   PrefUtils.setString(getApplicationContext(),"username",mUsername);
+                   PrefUtils.setString(getApplicationContext(),"token",token);
+                   LoginActivity.this.startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                   LoginActivity.this.finish();
+               }else{
+                   showConfirmDialog("登录结果","登录失败,请检查用户名或密码是否正确",null);
+               }
+
+
             }
         });
     }

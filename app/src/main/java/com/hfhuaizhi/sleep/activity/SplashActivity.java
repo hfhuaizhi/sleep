@@ -43,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private boolean initLoginState() {
-        if(EMClient.getInstance().isLoggedInBefore()&&EMClient.getInstance().isConnected()){
+        if(PrefUtils.getString(getApplicationContext(),"token",null)!=null){
             // if(EMClient.getInstance().isConnected()){
             //isLoggedInBefore 之前登陆过    isConnected 已经跟环信的服务器建立了连接
             startActivity(new Intent(getApplicationContext(),MainActivity.class));

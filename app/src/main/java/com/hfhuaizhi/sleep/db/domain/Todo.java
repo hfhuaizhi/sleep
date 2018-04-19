@@ -11,10 +11,11 @@ import java.io.Serializable;
 
 public class Todo implements Serializable {
     public int id;
-    public String title;
-    public String msg;
-    public String startTime;
-
+    public String title = null;
+    public String msg= null;
+    public String startTime= null;
+public int state = 1;
+public boolean over = false;
     public String getTitle() {
         return title;
     }

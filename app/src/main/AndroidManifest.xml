@@ -41,7 +41,7 @@
         </activity>
         <activity
             android:name=".activity.LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.Deep">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
         <activity
             android:name=".activity.MainActivity"
@@ -74,13 +74,17 @@
         </receiver>
         <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter>
-                <action android:name= "com.Reminder.MyReceiver" />
+                <action android:name="com.Reminder.MyReceiver"/>
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.RegisterActivity">
+        <activity android:name=".activity.RegisterActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            >
         </activity>
         <activity android:name=".activity.TodoDetailActivity">
+        </activity>
+        <activity android:name=".activity.AddNoteActivity">
         </activity>
     </application>
 
